@@ -1,4 +1,5 @@
 from socket import *
+import os
 import Tkinter as tk
 
 #window = tk.Tk()
@@ -11,9 +12,22 @@ bufSize = 1024
 clientSocket = socket(AF_INET, SOCK_STREAM)
 clientSocket.connect((host, serverPort))
 
-clientSocket.send("My list of files")
+myIP = gethostbyname(host)
+myPort = clientSocket.getsockname()[1]
 
-with open('new_file', 'wb') as f:
+clientSocket.send("HELLO")
+mess = clientSocket.recv(bufSize).decode()
+print(mess)
+
+i = 0
+entries = os.listdir('cl1/')
+for entry in entries:
+	name, ext = os.path.splitext(entry)
+	size = os.path.getsize('cl1/'+entry)
+	time = os.path.getmtime('cl1/'+entry)
+	clientSocket.send("<"+name+", "+ext+", "+str(size)+", "+str(time)+", "+str(myIP)+", "+str(myPort)+">\n")
+
+"""with open('new_file', 'wb') as f:
 	print 'File opened'
 	while True:
 		data = clientSocket.recv(bufSize)
@@ -24,7 +38,7 @@ with open('new_file', 'wb') as f:
 			break
 		f.write(data)
 
-print('Successfully got the file')
+print('Successfully got the file')"""
 clientSocket.close()
 print('Connection closed')
 
