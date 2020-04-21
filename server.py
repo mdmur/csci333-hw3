@@ -17,9 +17,17 @@ class SingleThread(Thread):
 
 	def run(self):
 		mess = conn.recv(bufSize).decode()
-		#print(mess)
+		print(mess)
+		conn.send("HI")
 
-		filename = 'file.txt'
+		i = 0
+		while i <= 5:
+			mess = conn.recv(bufSize).decode()
+			i+=1
+			print(mess)
+			
+
+	"""	filename = 'file.txt'
 		f = open(filename, 'rb')
 		while True:
 			data = f.read(bufSize)
@@ -30,7 +38,7 @@ class SingleThread(Thread):
 				f.close()
 				self.sock.close()
 				break
-		print("File sent")
+		print("File sent")"""
 
 serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
